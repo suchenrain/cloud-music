@@ -10,7 +10,7 @@ export const SliderContainer = styled.div`
   background: white;
   .before {
     position: absolute;
-    top: -200px;
+    top: -300px;
     height: 400px;
     width: 100%;
     width: 100%;

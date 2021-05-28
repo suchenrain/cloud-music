@@ -2,6 +2,7 @@
   "extends": "./paths.json",
   "compilerOptions": {
     "target": "es5",
+    "noImplicitAny": false,
     "checkJs": true,
     "moduleResolution": "node",
     "jsx": "react"
