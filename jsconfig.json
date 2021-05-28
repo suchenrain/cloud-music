@@ -1,10 +1,11 @@
 {
-    "compilerOptions": {
-        "checkJs": true,
-        "jsx": "react",
-        "moduleResolution": "node",
-        "baseUrl": "src"
-    },
-    "include": ["src"],
-    "exclude": ["node_modules"]
+  "extends": "./paths.json",
+  "compilerOptions": {
+    "target": "es5",
+    "checkJs": true,
+    "moduleResolution": "node",
+    "jsx": "react"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }
