@@ -1,5 +1,5 @@
 // @ts-nocheck
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { connect } from 'react-redux';
 import Horizen from '@baseUI/horizen-item';
 import { alphaTypes, categoryTypes } from '@api/config';
@@ -19,10 +19,13 @@ import {
 } from './store/actionCreators';
 
 import singerPNG from './singer.png';
+import { CHANGE_ALPHA, CHANGE_CATEGORY, CategoryDataContext } from './data';
 
 function Singers(props) {
-  let [category, setCategory] = useState('');
-  let [alpha, setAlpha] = useState('');
+  // let [category, setCategory] = useState('');
+  // let [alpha, setAlpha] = useState('');
+  const { data, dispatch } = useContext(CategoryDataContext);
+  const { category, alpha } = data.toJS();
 
   const {
     singerList,
@@ -40,17 +43,21 @@ function Singers(props) {
   } = props;
 
   useEffect(() => {
-    getHotSingerDispatch();
+    if (!singerList.size) {
+      getHotSingerDispatch();
+    }
     // eslint-disable-next-line
   }, []);
 
   const handleUpdateAlpha = (val) => {
-    setAlpha(val);
+    // setAlpha(val);
+    dispatch({ type: CHANGE_ALPHA, data: val });
     updateDispatch(category, val);
   };
 
   const handleUpdateCategory = (val) => {
-    setCategory(val);
+    // setCategory(val);
+    dispatch({ type: CHANGE_CATEGORY, data: val });
     updateDispatch(val, alpha);
   };
 

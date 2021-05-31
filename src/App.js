@@ -1,3 +1,4 @@
+import { Data } from '@application/singers/data';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { renderRoutes } from 'react-router-config';
@@ -13,7 +14,7 @@ function App() {
       <HashRouter>
         <GlobalStyle></GlobalStyle>
         <IconStyle></IconStyle>
-        {renderRoutes(routes)}
+        <Data>{renderRoutes(routes)}</Data>
       </HashRouter>
     </Provider>
   );
