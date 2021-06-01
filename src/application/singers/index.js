@@ -1,8 +1,9 @@
 // @ts-nocheck
+//eslint-disable-next-line
 import React, { useEffect, useState, useContext } from 'react';
 import { connect } from 'react-redux';
 import Horizen from '@baseUI/horizen-item';
-import { alphaTypes, categoryTypes } from '@api/config';
+import { alphaTypes, categoryTypes, areas } from '@api/config';
 import { List, ListContainer, ListItem, NavContainer } from './style';
 import Scroll from '@baseUI/scroll';
 import Loading from '@baseUI/loading';
@@ -19,13 +20,18 @@ import {
 } from './store/actionCreators';
 
 import singerPNG from './singer.png';
-import { CHANGE_ALPHA, CHANGE_CATEGORY, CategoryDataContext } from './data';
+import {
+  CHANGE_ALPHA,
+  CHANGE_CATEGORY,
+  CHANGE_AREA,
+  CategoryDataContext,
+} from './data';
 
 function Singers(props) {
   // let [category, setCategory] = useState('');
   // let [alpha, setAlpha] = useState('');
   const { data, dispatch } = useContext(CategoryDataContext);
-  const { category, alpha } = data.toJS();
+  const { category, alpha, area } = data.toJS();
 
   const {
     singerList,
@@ -52,21 +58,31 @@ function Singers(props) {
   const handleUpdateAlpha = (val) => {
     // setAlpha(val);
     dispatch({ type: CHANGE_ALPHA, data: val });
-    updateDispatch(category, val);
+    updateDispatch(category, area, val);
+  };
+  const handleUpdateArea = (val) => {
+    dispatch({ type: CHANGE_AREA, data: val });
+    updateDispatch(category, val, alpha);
   };
 
   const handleUpdateCategory = (val) => {
     // setCategory(val);
     dispatch({ type: CHANGE_CATEGORY, data: val });
-    updateDispatch(val, alpha);
+    updateDispatch(val, area, alpha);
   };
 
   const handlePullUp = () => {
-    pullUpRefreshDispatch(category, alpha, category === '', pageCount);
+    pullUpRefreshDispatch(
+      category,
+      area,
+      alpha,
+      category === '' && area === '',
+      pageCount
+    );
   };
 
   const handlePullDown = () => {
-    pullDownRefreshDispatch(category, alpha);
+    pullDownRefreshDispatch(category, area, alpha);
   };
 
   // //mock 数据
@@ -123,6 +139,12 @@ function Singers(props) {
           handleClick={handleUpdateCategory}
         ></Horizen>
         <Horizen
+          list={areas}
+          title={'地区:'}
+          oldVal={area}
+          handleClick={handleUpdateArea}
+        ></Horizen>
+        <Horizen
           list={alphaTypes}
           title={'首字母:'}
           oldVal={alpha}
@@ -158,29 +180,29 @@ const mapDispatchToProps = (dispatch) => {
     getHotSingerDispatch() {
       dispatch(getHotSingerList());
     },
-    updateDispatch(category, alpha) {
+    updateDispatch(category, area, alpha) {
       dispatch(changePageCount(0));
       dispatch(changeEnterLoading(true));
-      dispatch(getSingerList(category, alpha));
+      dispatch(getSingerList(category, area, alpha));
     },
     // 滑到最底部刷新部分的处理
-    pullUpRefreshDispatch(category, alpha, hot, count) {
+    pullUpRefreshDispatch(category, area, alpha, hot, count) {
       dispatch(changePullUpLoading(true));
       dispatch(changePageCount(count + 1));
       if (hot) {
         dispatch(refreshMoreHotSingerList());
       } else {
-        dispatch(refreshMoreSingerList(category, alpha));
+        dispatch(refreshMoreSingerList(category, area, alpha));
       }
     },
     //顶部下拉刷新
-    pullDownRefreshDispatch(category, alpha) {
+    pullDownRefreshDispatch(category, area, alpha) {
       dispatch(changePullDownLoading(true));
       dispatch(changePageCount(0)); //属于重新获取数据
-      if (category === '' && alpha === '') {
+      if (category === '' && alpha === '' && area === '') {
         dispatch(getHotSingerList());
       } else {
-        dispatch(getSingerList(category, alpha));
+        dispatch(getSingerList(category, area, alpha));
       }
     },
   };

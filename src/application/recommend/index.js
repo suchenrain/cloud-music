@@ -4,10 +4,11 @@ import RecommendList from '@components/list';
 import Slider from '@components/slider';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import * as actionTypes from './store/actionCreators';
+import { actionCreators } from './store';
 import { Content } from './style';
 import { forceCheck } from 'react-lazyload';
 import Loading from '@baseUI/loading';
+import { renderRoutes } from 'react-router-config';
 
 function Recommend(props) {
   const { bannerList, recommendList, enterLoading } = props;
@@ -35,6 +36,7 @@ function Recommend(props) {
         </div>
       </Scroll>
       {enterLoading ? <Loading></Loading> : null}
+      {renderRoutes(props.route.routes)}
     </Content>
   );
 }
@@ -51,10 +53,10 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => {
   return {
     getBannerDataDispatch() {
-      dispatch(actionTypes.getBannerList());
+      dispatch(actionCreators.getBannerList());
     },
     getRecommendListDataDispatch() {
-      dispatch(actionTypes.getRecommendList());
+      dispatch(actionCreators.getRecommendList());
     },
   };
 };

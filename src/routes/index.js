@@ -4,6 +4,7 @@ import Home from '@application/home';
 import Recommend from '@application/recommend';
 import Singers from '@application/singers';
 import Rank from '@application/rank';
+import Album from '@application/album';
 
 const routes = [
   {
@@ -18,6 +19,12 @@ const routes = [
       {
         path: '/recommend',
         component: Recommend,
+        routes: [
+          {
+            path: '/recommend/:id',
+            component: Album,
+          },
+        ],
       },
       {
         path: '/singers',
@@ -26,6 +33,13 @@ const routes = [
       {
         path: '/rank',
         component: Rank,
+        key: 'rank',
+        routes: [
+          {
+            path: '/rank/:id',
+            component: Album,
+          },
+        ],
       },
     ],
   },

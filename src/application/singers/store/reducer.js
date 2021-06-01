@@ -7,6 +7,7 @@ const defaultState = fromJS({
   pullUpLoading: false,
   pullDownLoading: false,
   pageCount: 0,
+  pageSize: 30,
 });
 
 const reducer = (state = defaultState, action) => {

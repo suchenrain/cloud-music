@@ -8,12 +8,26 @@ export const getRecommendListReq = () => {
   return axiosInstance.get('/personalized');
 };
 
-export const getHotSingerListRequest = (count) => {
-  return axiosInstance.get(`/top/artists?offset=${count}`);
+export const getHotSingerListRequest = (count, limit = 30) => {
+  return axiosInstance.get(`/top/artists?offset=${count}&limit=${limit}`);
 };
 
-export const getSingerListRequest = (category, alpha, count) => {
+export const getSingerListRequest = (
+  category,
+  area,
+  alpha,
+  count,
+  limit = 30
+) => {
   return axiosInstance.get(
-    `/artist/list?cat=${category}&initial=${alpha.toLowerCase()}&offset=${count}`
+    `/artist/list?type=${category}&area=${area}&initial=${alpha.toLowerCase()}&offset=${count}&limit=${limit}`
   );
+};
+
+export const getRankListReq = () => {
+  return axiosInstance.get(`toplist/detail`);
+};
+
+export const getAlbumDetailReq = (id) => {
+  return axiosInstance.get(`/playlist/detail?id=${id}`);
 };

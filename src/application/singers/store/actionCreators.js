@@ -52,8 +52,9 @@ const getHotSingerList = () => {
 const refreshMoreHotSingerList = () => {
   return (dispatch, getState) => {
     const pageCount = getState().getIn(['singers', 'pageCount']);
+    const pageSize = getState().getIn(['singers', 'pageSize']);
     const singerList = getState().getIn(['singers', 'singerList']).toJS();
-    getHotSingerListRequest(pageCount)
+    getHotSingerListRequest(pageCount * pageSize)
       .then((res) => {
         // @ts-ignore
         const data = [...singerList, ...res.artists];
@@ -67,9 +68,9 @@ const refreshMoreHotSingerList = () => {
 };
 
 //第一次加载对应类别的歌手
-const getSingerList = (category, alpha) => {
+const getSingerList = (category, area, alpha) => {
   return (dispatch, getState) => {
-    getSingerListRequest(category, alpha, 0)
+    getSingerListRequest(category, area, alpha, 0)
       .then((res) => {
         // @ts-ignore
         const data = res.artists;
@@ -84,11 +85,12 @@ const getSingerList = (category, alpha) => {
 };
 
 //加载更多歌手
-const refreshMoreSingerList = (category, alpha) => {
+const refreshMoreSingerList = (category, area, alpha) => {
   return (dispatch, getState) => {
     const pageCount = getState().getIn(['singers', 'pageCount']);
+    const pageSize = getState().getIn(['singers', 'pageSize']);
     const singerList = getState().getIn(['singers', 'singerList']).toJS();
-    getSingerListRequest(category, alpha, pageCount)
+    getSingerListRequest(category, area, alpha, pageCount * pageSize, pageSize)
       .then((res) => {
         // @ts-ignore
         const data = [...singerList, ...res.artists];
