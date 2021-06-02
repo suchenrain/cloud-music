@@ -5,6 +5,7 @@ import Recommend from '@application/recommend';
 import Singers from '@application/singers';
 import Rank from '@application/rank';
 import Album from '@application/album';
+import Singer from '@application/singer';
 
 const routes = [
   {
@@ -19,6 +20,7 @@ const routes = [
       {
         path: '/recommend',
         component: Recommend,
+        key: 'recommend',
         routes: [
           {
             path: '/recommend/:id',
@@ -29,6 +31,13 @@ const routes = [
       {
         path: '/singers',
         component: Singers,
+        key: 'singers',
+        routes: [
+          {
+            path: '/singers/:id',
+            component: Singer,
+          },
+        ],
       },
       {
         path: '/rank',

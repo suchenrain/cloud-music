@@ -8,6 +8,7 @@ import { List, ListContainer, ListItem, NavContainer } from './style';
 import Scroll from '@baseUI/scroll';
 import Loading from '@baseUI/loading';
 import LazyLoad, { forceCheck } from 'react-lazyload';
+import { renderRoutes } from 'react-router-config';
 import {
   changePageCount,
   changeEnterLoading,
@@ -85,6 +86,10 @@ function Singers(props) {
     pullDownRefreshDispatch(category, area, alpha);
   };
 
+  const enterDetail = (id) => {
+    props.history.push(`/singers/${id}`);
+  };
+
   // //mock 数据
   // const singerList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((item) => {
   //   return {
@@ -101,7 +106,10 @@ function Singers(props) {
       <List>
         {list.map((item, index) => {
           return (
-            <ListItem key={`${item.accountId}-${index}`}>
+            <ListItem
+              key={`${item.accountId}-${index}`}
+              onClick={() => enterDetail(item.id)}
+            >
               <div className='img_wrapper'>
                 <LazyLoad
                   placeholder={
@@ -163,6 +171,7 @@ function Singers(props) {
         </Scroll>
         <Loading show={enterLoading}></Loading>
       </ListContainer>
+      {renderRoutes(props.route.routes)}
     </div>
   );
 }
