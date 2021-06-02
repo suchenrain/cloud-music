@@ -15,9 +15,9 @@ const reducer = (state = defaultState, action) => {
       return state.set('recommendList', action.data);
     case actionTypes.CHANGE_ENTER_LOADING:
       return state.set('enterLoading', action.data);
-			
+
     default:
-      return defaultState;
+      return state;
   }
 };
 

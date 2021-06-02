@@ -66,7 +66,7 @@ function Album(props) {
           <div className='play_count'>
             <i className='iconfont play'>&#xe885;</i>
             <span className='count'>
-              {Math.floor(currentAlbum.subscribedCount / 1000) / 10} 万{' '}
+              {getCount(currentAlbum.subscribedCount)}
             </span>
           </div>
         </div>
@@ -149,6 +149,7 @@ function Album(props) {
       appear={true}
       unmountOnExit
       onExited={props.history.goBack}
+      nodeRef={headerEl}
     >
       <Container>
         <Header
