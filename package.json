@@ -51,6 +51,8 @@
   },
   "devDependencies": {
     "@types/prop-types": "^15.7.3",
-    "@types/styled-components": "^5.1.9"
+    "@types/styled-components": "^5.1.9",
+    "compression": "^1.7.4",
+    "express": "^4.17.1"
   }
 }
