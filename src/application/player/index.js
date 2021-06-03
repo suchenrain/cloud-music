@@ -5,6 +5,9 @@ import MiniPlayer from './mini';
 import NormalPlayer from './normal';
 
 function Player(props) {
+  const { fullScreen } = props;
+  const { toggleFullScreenDispatch } = props;
+
   const currentSong = {
     al: {
       picUrl:
@@ -15,8 +18,16 @@ function Player(props) {
   };
   return (
     <div>
-      {/* <MiniPlayer song={currentSong}></MiniPlayer> */}
-      <NormalPlayer song={currentSong}></NormalPlayer>
+      <MiniPlayer
+        song={currentSong}
+        fullScreen={fullScreen}
+        toggleFullScreen={toggleFullScreenDispatch}
+      ></MiniPlayer>
+      <NormalPlayer
+        song={currentSong}
+        fullScreen={fullScreen}
+        toggleFullScreen={toggleFullScreenDispatch}
+      ></NormalPlayer>
     </div>
   );
 }
