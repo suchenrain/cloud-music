@@ -1,9 +1,24 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { actionCreators } from './store';
+import MiniPlayer from './mini';
+import NormalPlayer from './normal';
 
 function Player(props) {
-  return <div>player</div>;
+  const currentSong = {
+    al: {
+      picUrl:
+        'https://p1.music.126.net/JL_id1CFwNJpzgrXwemh4Q==/109951164172892390.jpg',
+    },
+    name: '木偶人',
+    ar: [{ name: '薛之谦' }],
+  };
+  return (
+    <div>
+      {/* <MiniPlayer song={currentSong}></MiniPlayer> */}
+      <NormalPlayer song={currentSong}></NormalPlayer>
+    </div>
+  );
 }
 
 const mapStateToProps = (state) => ({
