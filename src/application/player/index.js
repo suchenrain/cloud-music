@@ -44,25 +44,25 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  togglePlayingDispatch: (data) => {
+  togglePlayingDispatch(data) {
     dispatch(actionCreators.changePlayingState(data));
   },
-  toggleFullScreenDispatch: (data) => {
+  toggleFullScreenDispatch(data) {
     dispatch(actionCreators.changeFullScreen(data));
   },
-  togglePlayListDispatch: (data) => {
+  togglePlayListDispatch(data) {
     dispatch(actionCreators.changeShowPlayList(data));
   },
-  changeCurrentIndexDispatch: (index) => {
+  changeCurrentIndexDispatch(index) {
     dispatch(actionCreators.changeCurrentIndex(index));
   },
-  changeCurrentDispatch: (data) => {
+  changeCurrentDispatch(data) {
     dispatch(actionCreators.changeCurrentSong(data));
   },
-  changeModeDispatch: (data) => {
+  changeModeDispatch(data) {
     dispatch(actionCreators.changePlayMode(data));
   },
-  changePlayListDispatch: (data) => {
+  changePlayListDispatch(data) {
     dispatch(actionCreators.changePlayList(data));
   },
 });

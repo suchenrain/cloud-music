@@ -1,5 +1,5 @@
 import { getName } from '@api/utils';
-import { default as React, memo, useRef } from 'react';
+import React, { memo, useRef } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { MiniPlayerContainer } from './style';
 
