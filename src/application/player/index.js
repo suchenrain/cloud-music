@@ -3,119 +3,81 @@ import { connect } from 'react-redux';
 import { actionCreators } from './store';
 import MiniPlayer from './mini';
 import NormalPlayer from './normal';
-import { getSongUrl, isEmptyObject } from '@api/utils';
+import { findIndex, getSongUrl, isEmptyObject, shuffle } from '@api/utils';
+import { playMode } from '@api/config';
 
 function Player(props) {
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  //记录之前的歌曲，以便于下次重渲染时比对是否是一首歌
+  const [preSong, setPreSong] = useState({});
+  let percent = isNaN(currentTime / duration) ? 0 : currentTime / duration;
+
+  const audioRef = useRef();
+
   const {
     fullScreen,
     playing,
+    playList: immutablePlayList,
     currentIndex,
     currentSong: immutableCurrentSong,
+    mode,
+    sequencePlayList: immutableSequencePlayList,
   } = props;
   const {
     toggleFullScreenDispatch,
     togglePlayingDispatch,
     changeCurrentIndexDispatch,
     changeCurrentDispatch,
+    changeModeDispatch,
+    changePlayListDispatch,
   } = props;
 
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const audioRef = useRef();
-
-  let percent = isNaN(currentTime / duration) ? 0 : currentTime / duration;
-  let currentSong = immutableCurrentSong.toJS();
-
-  const playList = [
-    {
-      ftype: 0,
-      djId: 0,
-      a: null,
-      cd: '01',
-      crbt: null,
-      no: 1,
-      st: 0,
-      rt: '',
-      cf: '',
-      alia: ['手游《梦幻花园》苏州园林版推广曲'],
-      rtUrls: [],
-      fee: 0,
-      s_id: 0,
-      copyright: 0,
-      h: {
-        br: 320000,
-        fid: 0,
-        size: 9400365,
-        vd: -45814,
-      },
-      mv: 0,
-      al: {
-        id: 84991301,
-        name: '拾梦纪',
-        picUrl:
-          'http://p1.music.126.net/M19SOoRMkcHmJvmGflXjXQ==/109951164627180052.jpg',
-        tns: [],
-        pic_str: '109951164627180052',
-        pic: 109951164627180050,
-      },
-      name: '拾梦纪',
-      l: {
-        br: 128000,
-        fid: 0,
-        size: 3760173,
-        vd: -41672,
-      },
-      rtype: 0,
-      m: {
-        br: 192000,
-        fid: 0,
-        size: 5640237,
-        vd: -43277,
-      },
-      cp: 1416668,
-      mark: 0,
-      rtUrl: null,
-      mst: 9,
-      dt: 234947,
-      ar: [
-        {
-          id: 12084589,
-          name: '妖扬',
-          tns: [],
-          alias: [],
-        },
-        {
-          id: 12578371,
-          name: '金天',
-          tns: [],
-          alias: [],
-        },
-      ],
-      pop: 5,
-      pst: 0,
-      t: 0,
-      v: 3,
-      id: 33894312,
-      publishTime: 0,
-      rurl: null,
-    },
-  ];
+  const currentSong = immutableCurrentSong.toJS();
+  const playList = immutablePlayList.toJS();
+  const sequencePlayList = immutableSequencePlayList.toJS();
 
   useEffect(() => {
-    if (!currentSong) return;
+    if (isEmptyObject(currentSong)) return;
     changeCurrentIndexDispatch(0);
     const current = playList[0];
     changeCurrentDispatch(current);
     // @ts-ignore
     audioRef.current.src = getSongUrl(current.id);
+    // setTimeout(() => {
+    //   // @ts-ignore
+    //   audioRef.current.play();
+    // }, 0);
+    // togglePlayingDispatch(true);
+    setCurrentTime(0);
+    setDuration((current.dt / 1000) | 0);
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    if (
+      !playList.length ||
+      currentIndex === -1 ||
+      !playList[currentIndex] ||
+      // @ts-ignore
+      playList[currentIndex].id === preSong.id
+    )
+      return;
+
+    let current = playList[currentIndex];
+    changeCurrentDispatch(current);
+    setPreSong(current);
+    // @ts-ignore
+    audioRef.current.src = getSongUrl(current.id);
     setTimeout(() => {
       // @ts-ignore
       audioRef.current.play();
-    }, 0);
+    });
     togglePlayingDispatch(true);
     setCurrentTime(0);
     setDuration((current.dt / 1000) | 0);
-  }, []);
+    // eslint-disable-next-line
+  }, [playList, currentIndex]);
 
   useEffect(() => {
     // @ts-ignore
@@ -141,6 +103,63 @@ function Player(props) {
     }
   };
 
+  const handleLoop = () => {
+    // @ts-ignore
+    audioRef.current.currentTime = 0;
+    // changePlayingState(true);
+    togglePlayingDispatch(true);
+    // @ts-ignore
+    audioRef.current.play();
+  };
+
+  const handlePrev = () => {
+    if (playList.length === 1) {
+      handleLoop();
+      return;
+    }
+    let index = currentIndex - 1;
+    if (index < 0) index = playList.length - 1;
+    if (!playing) togglePlayingDispatch(true);
+    changeCurrentIndexDispatch(index);
+  };
+
+  const handleNext = () => {
+    //播放列表只有一首歌时单曲循环
+    if (playList.length === 1) {
+      handleLoop();
+      return;
+    }
+    let index = currentIndex + 1;
+    if (index === playList.length) index = 0;
+    if (!playing) togglePlayingDispatch(true);
+    changeCurrentIndexDispatch(index);
+  };
+
+  const handleEnd = () => {
+    if (mode === playMode.loop) {
+      handleLoop();
+    } else {
+      handleNext();
+    }
+  };
+
+  const changeMode = () => {
+    const newMode = (mode + 1) % 3;
+    if (newMode === playMode.sequence) {
+      changePlayListDispatch(sequencePlayList);
+      let index = findIndex(currentSong, sequencePlayList);
+      changeCurrentIndexDispatch(index);
+    } else if (newMode === playMode.loop) {
+      changePlayListDispatch(sequencePlayList);
+    } else if (newMode === playMode.random) {
+      const newList = shuffle(sequencePlayList);
+      let index = findIndex(currentSong, newList);
+      changePlayListDispatch(newList);
+      changeCurrentIndexDispatch(index);
+    }
+    changeModeDispatch(newMode);
+  };
+
   return (
     <div>
       {isEmptyObject(currentSong) ? null : (
@@ -156,18 +175,26 @@ function Player(props) {
       {isEmptyObject(currentSong) ? null : (
         <NormalPlayer
           song={currentSong}
+          mode={mode}
           fullScreen={fullScreen}
           percent={percent}
           playing={playing}
           duration={duration}
           currentTime={currentTime}
           toggleFullScreen={toggleFullScreenDispatch}
+          handlePrev={handlePrev}
+          handleNext={handleNext}
           clickPlaying={clickPlaying}
           onProgressChange={onProgressChange}
+          changeMode={changeMode}
         ></NormalPlayer>
       )}
 
-      <audio ref={audioRef} onTimeUpdate={updateTime}></audio>
+      <audio
+        ref={audioRef}
+        onTimeUpdate={updateTime}
+        onEnded={handleEnd}
+      ></audio>
     </div>
   );
 }

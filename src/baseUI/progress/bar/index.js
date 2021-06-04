@@ -26,6 +26,7 @@ function ProgressBar(props) {
         transform
       ] = `translate3d(${offsetWidth}px, 0, 0)`;
     }
+    // eslint-disable-next-line
   }, [percent]);
 
   const progressBtnWidth = 0;

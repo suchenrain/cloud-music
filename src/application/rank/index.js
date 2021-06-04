@@ -1,4 +1,4 @@
-import { filterIdx, filterIndex } from '@api/utils';
+import { filterIndex } from '@api/utils';
 import Scroll from '@baseUI/scroll';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';

@@ -12,6 +12,7 @@ const Header = forwardRef((props, ref) => {
         &#xe655;
       </i>
       {isMarquee ? (
+        // eslint-disable-next-line
         <marquee>
           <h1>{title}</h1>
         </marquee>

@@ -1,14 +1,29 @@
 import React from 'react';
 import { SongList, SongItem } from './style';
 import { getName, getCount } from '@api/utils';
+import { actionCreators } from '@application/player/store';
+import { connect } from 'react-redux';
 
 const SongsList = React.forwardRef((props, refs) => {
+  // @ts-ignore
   const { collectCount, showCollect, songs } = props;
+
+  const {
+    // @ts-ignore
+    changePlayListDispatch,
+    // @ts-ignore
+    changeSequecePlayListDispatch,
+    // @ts-ignore
+    changeCurrentIndexDispatch,
+  } = props;
 
   const totalCount = songs.length;
 
+  // @ts-ignore
   const selectItem = (e, index) => {
-    console.log(index);
+    changePlayListDispatch(songs);
+    changeSequecePlayListDispatch(songs);
+    changeCurrentIndexDispatch(index);
   };
 
   let songList = (list) => {
@@ -40,7 +55,11 @@ const SongsList = React.forwardRef((props, refs) => {
     );
   };
   return (
-    <SongList ref={refs} showBackground={props.showBackground}>
+    <SongList
+      ref={refs}
+      // @ts-ignore
+      showBackground={props.showBackground}
+    >
       <div className='first_line'>
         <div className='play_all' onClick={(e) => selectItem(e, 0)}>
           <i className='iconfont'>&#xe6e3;</i>
@@ -56,4 +75,19 @@ const SongsList = React.forwardRef((props, refs) => {
   );
 });
 
-export default React.memo(SongsList);
+// @ts-ignore
+const mapDispatchToProps = (dispatch) => {
+  return {
+    changePlayListDispatch(data) {
+      dispatch(actionCreators.changePlayList(data));
+    },
+    changeCurrentIndexDispatch(data) {
+      dispatch(actionCreators.changeCurrentIndex(data));
+    },
+    changeSequecePlayListDispatch(data) {
+      dispatch(actionCreators.changeSequecePlayList(data));
+    },
+  };
+};
+
+export default connect(null, mapDispatchToProps)(React.memo(SongsList));
