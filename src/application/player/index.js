@@ -37,22 +37,22 @@ function Player(props) {
   const playList = immutablePlayList.toJS();
   const sequencePlayList = immutableSequencePlayList.toJS();
 
-  useEffect(() => {
-    if (isEmptyObject(currentSong)) return;
-    changeCurrentIndexDispatch(0);
-    const current = playList[0];
-    changeCurrentDispatch(current);
-    // @ts-ignore
-    audioRef.current.src = getSongUrl(current.id);
-    // setTimeout(() => {
-    //   // @ts-ignore
-    //   audioRef.current.play();
-    // }, 0);
-    // togglePlayingDispatch(true);
-    setCurrentTime(0);
-    setDuration((current.dt / 1000) | 0);
-    // eslint-disable-next-line
-  }, []);
+  // useEffect(() => {
+  //   if (isEmptyObject(currentSong)) return;
+  //   changeCurrentIndexDispatch(0);
+  //   const current = playList[0];
+  //   changeCurrentDispatch(current);
+  //   // @ts-ignore
+  //   audioRef.current.src = getSongUrl(current.id);
+  //   // setTimeout(() => {
+  //   //   // @ts-ignore
+  //   //   audioRef.current.play();
+  //   // }, 0);
+  //   // togglePlayingDispatch(true);
+  //   setCurrentTime(0);
+  //   setDuration((current.dt / 1000) | 0);
+  //   // eslint-disable-next-line
+  // }, []);
 
   useEffect(() => {
     if (
