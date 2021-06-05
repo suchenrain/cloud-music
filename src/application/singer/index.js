@@ -14,11 +14,14 @@ import { HEADER_HEIGHT } from '@api/config';
 import { actionCreators } from './store';
 import { connect } from 'react-redux';
 import Loading from '@baseUI/loading';
+import MusicNote from '@baseUI/music-note';
 
 function Singer(props) {
   // 图片初始高度
   const initialHeight = useRef(0);
   const [showStatus, setShowStatus] = useState(true);
+
+  const musicNoteRef = useRef();
 
   const { artist: immutableArtist, songs: immutableSongs, loading } = props;
   const { getSingerDataDispatch } = props;
@@ -92,6 +95,11 @@ function Singer(props) {
     }
   }, []);
 
+  const musicAnimation = (x, y) => {
+    // @ts-ignore
+    musicNoteRef.current.startAnimation({ x, y });
+  };
+
   return (
     <CSSTransition
       in={showStatus}
@@ -117,10 +125,15 @@ function Singer(props) {
         <BgLayer ref={layer}></BgLayer>
         <SongListWrapper ref={songScrollWrapper}>
           <Scroll ref={songScroll} onScroll={handleScroll}>
-            <SongList songs={songs} showCollect={false}></SongList>
+            <SongList
+              songs={songs}
+              showCollect={false}
+              musicAnimation={musicAnimation}
+            ></SongList>
           </Scroll>
         </SongListWrapper>
         {loading ? <Loading></Loading> : null}
+        <MusicNote ref={musicNoteRef}></MusicNote>
       </Container>
     </CSSTransition>
   );

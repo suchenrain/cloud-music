@@ -10,11 +10,19 @@ import { actionCreators } from './store';
 import { connect } from 'react-redux';
 import Loading from '@baseUI/loading';
 import SongList from '@application/songList';
+import MusicNote from '@baseUI/music-note';
 
 function Album(props) {
   const [showStatus, setShowStatus] = useState(true);
   const [title, setTitle] = useState('歌单');
   const [isMarquee, setIsMarquee] = useState(false); // 是否跑马灯
+
+  const musicNoteRef = useRef();
+
+  const musicAnimation = (x, y) => {
+    // @ts-ignore
+    musicNoteRef.current.startAnimation({ x, y });
+  };
 
   //歌单id
   const id = props.match.params.id;
@@ -114,6 +122,7 @@ function Album(props) {
         collectCount={currentAlbum.subscribedCount}
         showCollect={true}
         songs={currentAlbum.tracks}
+        musicAnimation={musicAnimation}
       ></SongList>
     );
   };
@@ -144,6 +153,7 @@ function Album(props) {
           </Scroll>
         ) : null}
         {enterLoading ? <Loading></Loading> : null}
+        <MusicNote ref={musicNoteRef}></MusicNote>
       </Container>
     </CSSTransition>
   );
