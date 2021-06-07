@@ -5,6 +5,7 @@ import MiniPlayer from './mini';
 import NormalPlayer from './normal';
 import { findIndex, getSongUrl, isEmptyObject, shuffle } from '@api/utils';
 import { playMode } from '@api/config';
+import PlayList from './playList';
 
 function Player(props) {
   const [currentTime, setCurrentTime] = useState(0);
@@ -28,6 +29,7 @@ function Player(props) {
   const {
     toggleFullScreenDispatch,
     togglePlayingDispatch,
+    togglePlayListDispatch,
     changeCurrentIndexDispatch,
     changeCurrentDispatch,
     changeModeDispatch,
@@ -149,7 +151,7 @@ function Player(props) {
   };
   const handlePlayError = () => {
     songReady.current = true;
-    alert('播放出错');
+    togglePlayingDispatch(false);
   };
 
   const changeMode = () => {
@@ -178,6 +180,7 @@ function Player(props) {
           playing={playing}
           percent={percent}
           toggleFullScreen={toggleFullScreenDispatch}
+          togglePlayList={togglePlayListDispatch}
           clickPlaying={clickPlaying}
         ></MiniPlayer>
       )}
@@ -191,6 +194,7 @@ function Player(props) {
           duration={duration}
           currentTime={currentTime}
           toggleFullScreen={toggleFullScreenDispatch}
+          togglePlayList={togglePlayListDispatch}
           handlePrev={handlePrev}
           handleNext={handleNext}
           clickPlaying={clickPlaying}
@@ -205,6 +209,7 @@ function Player(props) {
         onEnded={handleEnd}
         onError={handlePlayError}
       ></audio>
+      <PlayList></PlayList>
     </div>
   );
 }
