@@ -6,16 +6,22 @@ import NormalPlayer from './normal';
 import { findIndex, getSongUrl, isEmptyObject, shuffle } from '@api/utils';
 import { playMode } from '@api/config';
 import PlayList from './playList';
+import { getLyricReq } from '@api/request';
+import Lyric from '@api/lyric-parser';
 
 function Player(props) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   //记录之前的歌曲，以便于下次重渲染时比对是否是一首歌
   const [preSong, setPreSong] = useState({});
+
   let percent = isNaN(currentTime / duration) ? 0 : currentTime / duration;
 
   const audioRef = useRef();
   const songReady = useRef(true);
+  const currentLyric = useRef();
+  const [currentPlayingLyric, setPlayingLyric] = useState('');
+  const currentLineNum = useRef(0);
 
   const {
     fullScreen,
@@ -39,23 +45,6 @@ function Player(props) {
   const currentSong = immutableCurrentSong.toJS();
   const playList = immutablePlayList.toJS();
   const sequencePlayList = immutableSequencePlayList.toJS();
-
-  // useEffect(() => {
-  //   if (isEmptyObject(currentSong)) return;
-  //   changeCurrentIndexDispatch(0);
-  //   const current = playList[0];
-  //   changeCurrentDispatch(current);
-  //   // @ts-ignore
-  //   audioRef.current.src = getSongUrl(current.id);
-  //   // setTimeout(() => {
-  //   //   // @ts-ignore
-  //   //   audioRef.current.play();
-  //   // }, 0);
-  //   // togglePlayingDispatch(true);
-  //   setCurrentTime(0);
-  //   setDuration((current.dt / 1000) | 0);
-  //   // eslint-disable-next-line
-  // }, []);
 
   useEffect(() => {
     if (
@@ -81,6 +70,7 @@ function Player(props) {
       });
     });
     togglePlayingDispatch(true);
+    getLyric(current.id);
     setCurrentTime(0);
     setDuration((current.dt / 1000) | 0);
     // eslint-disable-next-line
@@ -91,9 +81,48 @@ function Player(props) {
     playing ? audioRef.current.play() : audioRef.current.pause();
   }, [playing]);
 
+  const handleLyric = ({ lineNum, txt }) => {
+    if (!currentLyric.current) return;
+    currentLineNum.current = lineNum;
+    setPlayingLyric(txt);
+  };
+
+  const getLyric = (id) => {
+    let lyric = '';
+    if (currentLyric.current) {
+      // @ts-ignore
+      currentLyric.current.stop();
+    }
+    getLyricReq(id)
+      .then((data) => {
+        // @ts-ignore
+        lyric = data.lrc.lyric;
+        if (!lyric) {
+          currentLyric.current = null;
+          return;
+        }
+        // @ts-ignore
+        currentLyric.current = new Lyric(lyric, handleLyric);
+        // @ts-ignore
+        currentLyric.current.play();
+        currentLineNum.current = 0;
+        // @ts-ignore
+        currentLyric.current.seek(0);
+      })
+      .catch(() => {
+        songReady.current = true;
+        // @ts-ignore
+        audioRef.current.play();
+      });
+  };
+
   const clickPlaying = (e, state) => {
     e.stopPropagation();
     togglePlayingDispatch(state);
+    if (currentLyric.current) {
+      // @ts-ignore
+      currentLyric.current.togglePlay(currentTime * 1000);
+    }
   };
 
   const updateTime = (e) => {
@@ -107,6 +136,11 @@ function Player(props) {
     audioRef.current.currentTime = newTime;
     if (!playing) {
       togglePlayingDispatch(true);
+    }
+		
+    if (currentLyric.current) {
+      // @ts-ignore
+      currentLyric.current.seek(newTime * 1000);
     }
   };
 
@@ -200,6 +234,9 @@ function Player(props) {
           clickPlaying={clickPlaying}
           onProgressChange={onProgressChange}
           changeMode={changeMode}
+          currentLyric={currentLyric.current}
+          currentPlayingLyric={currentPlayingLyric}
+          currentLineNum={currentLineNum.current}
         ></NormalPlayer>
       )}
 

@@ -35,3 +35,7 @@ export const getAlbumDetailReq = (id) => {
 export const getSingerInfoReq = (id) => {
   return axiosInstance.get(`/artists?id=${id}`);
 };
+
+export const getLyricReq = (id) => {
+  return axiosInstance.get(`/lyric?id=${id}`);
+};
