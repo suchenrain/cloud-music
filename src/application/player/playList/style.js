@@ -51,6 +51,7 @@ export const ScrollWrapper = styled.div`
 export const ListHeader = styled.div`
   position: relative;
   padding: 20px 30px 10px 20px;
+  border-bottom: 1px solid #ececec;
   .title {
     display: flex;
     align-items: center;
