@@ -14,6 +14,7 @@ function Player(props) {
   let percent = isNaN(currentTime / duration) ? 0 : currentTime / duration;
 
   const audioRef = useRef();
+  const songReady = useRef(true);
 
   const {
     fullScreen,
@@ -60,18 +61,22 @@ function Player(props) {
       currentIndex === -1 ||
       !playList[currentIndex] ||
       // @ts-ignore
-      playList[currentIndex].id === preSong.id
+      playList[currentIndex].id === preSong.id ||
+      !songReady.current
     )
       return;
 
     let current = playList[currentIndex];
     changeCurrentDispatch(current);
+    songReady.current = false;
     setPreSong(current);
     // @ts-ignore
     audioRef.current.src = getSongUrl(current.id);
     setTimeout(() => {
       // @ts-ignore
-      audioRef.current.play();
+      audioRef.current.play().then(() => {
+        songReady.current = true;
+      });
     });
     togglePlayingDispatch(true);
     setCurrentTime(0);
@@ -142,6 +147,10 @@ function Player(props) {
       handleNext();
     }
   };
+  const handlePlayError = () => {
+    songReady.current = true;
+    alert('播放出错');
+  };
 
   const changeMode = () => {
     const newMode = (mode + 1) % 3;
@@ -194,6 +203,7 @@ function Player(props) {
         ref={audioRef}
         onTimeUpdate={updateTime}
         onEnded={handleEnd}
+        onError={handlePlayError}
       ></audio>
     </div>
   );
