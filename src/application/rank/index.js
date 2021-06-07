@@ -8,7 +8,7 @@ import Loading from '@baseUI/loading';
 import { renderRoutes } from 'react-router-config';
 
 function Rank(props) {
-  const { rankList: list, loading } = props;
+  const { rankList: list, loading, songsCount } = props;
   const { getRankListDataDispatch } = props;
 
   let rankList = list ? list.toJS() : [];
@@ -67,7 +67,7 @@ function Rank(props) {
   let displayStyle = loading ? { display: 'none' } : { display: '' };
 
   return (
-    <Container>
+    <Container play={songsCount}>
       <Scroll>
         <div>
           <h1 className='offical' style={displayStyle}>
@@ -95,6 +95,7 @@ function Rank(props) {
 const mapStateToProps = (state) => ({
   rankList: state.getIn(['rank', 'rankList']),
   loading: state.getIn(['rank', 'loading']),
+  songsCount: state.getIn(['player', 'playList']).size,
 });
 
 const mapDispatchToProps = (dispatch) => {
