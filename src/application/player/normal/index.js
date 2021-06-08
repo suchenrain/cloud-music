@@ -1,5 +1,5 @@
 import { formatPlayTime, getName, prefixStyle } from '@api/utils';
-import React, { memo, useEffect, useRef } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import animations from 'create-keyframe-animation';
 import { ProgressBar } from '@baseUI/progress';
@@ -43,7 +43,7 @@ function NormalPlayer(props) {
   const normalPlayerRef = useRef();
   const cdWrapperRef = useRef();
 
-  const currentState = useRef('');
+  const [currentState, setCurrentState] = useState('');
   const lyricScrollRef = useRef();
   const lyricLineRefs = useRef([]);
 
@@ -132,7 +132,7 @@ function NormalPlayer(props) {
     // 不置为 none 现在全屏播放器页面还是存在
     // @ts-ignore
     normalPlayerRef.current.style.display = 'none';
-    currentState.current = '';
+    setCurrentState('');
   };
 
   const getPlayMode = () => {
@@ -149,10 +149,10 @@ function NormalPlayer(props) {
 
   //显示歌词
   const toggleCurrentState = () => {
-    if (currentState.current !== 'lyric') {
-      currentState.current = 'lyric';
+    if (currentState !== 'lyric') {
+      setCurrentState('lyric');
     } else {
-      currentState.current = '';
+      setCurrentState('');
     }
   };
 
@@ -193,12 +193,11 @@ function NormalPlayer(props) {
           <CSSTransition
             timeout={400}
             classNames='fade'
-            in={currentState.current !== 'lyric'}
+            in={currentState !== 'lyric'}
           >
             <CDWrapper
               style={{
-                visibility:
-                  currentState.current !== 'lyric' ? 'visible' : 'hidden',
+                visibility: currentState !== 'lyric' ? 'visible' : 'hidden',
               }}
             >
               <div className='cd'>
@@ -214,14 +213,13 @@ function NormalPlayer(props) {
           <CSSTransition
             timeout={400}
             classNames='fade'
-            in={currentState.current === 'lyric'}
+            in={currentState === 'lyric'}
           >
             <LyricContainer>
               <Scroll ref={lyricScrollRef}>
                 <LyricWrapper
                   style={{
-                    visibility:
-                      currentState.current === 'lyric' ? 'visible' : 'hidden',
+                    visibility: currentState === 'lyric' ? 'visible' : 'hidden',
                   }}
                   className='lyric_wrapper'
                 >

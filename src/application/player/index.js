@@ -69,10 +69,10 @@ function Player(props) {
         songReady.current = true;
       });
     });
-    togglePlayingDispatch(true);
     getLyric(current.id);
     setCurrentTime(0);
     setDuration((current.dt / 1000) | 0);
+    togglePlayingDispatch(true);
     // eslint-disable-next-line
   }, [playList, currentIndex]);
 
@@ -110,15 +110,19 @@ function Player(props) {
         currentLyric.current.seek(0);
       })
       .catch(() => {
-        songReady.current = true;
+        // songReady.current = true;
         // @ts-ignore
-        audioRef.current.play();
+        // audioRef.current.play();
       });
   };
 
   const clickPlaying = (e, state) => {
     e.stopPropagation();
     togglePlayingDispatch(state);
+    pauseLyric();
+  };
+
+  const pauseLyric = () => {
     if (currentLyric.current) {
       // @ts-ignore
       currentLyric.current.togglePlay(currentTime * 1000);
@@ -186,6 +190,7 @@ function Player(props) {
   const handlePlayError = () => {
     songReady.current = true;
     togglePlayingDispatch(false);
+    pauseLyric();
   };
 
   const changeMode = () => {
