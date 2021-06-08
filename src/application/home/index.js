@@ -2,7 +2,7 @@ import React from 'react';
 import { renderRoutes } from 'react-router-config';
 import { NavLink } from 'react-router-dom';
 import { Tab, TabItem, Top } from './style';
-import Player from '@application/player'
+import Player from '@application/player';
 
 function Home(props) {
   const { route } = props;
@@ -12,7 +12,14 @@ function Home(props) {
       <Top>
         <span className='iconfont menu'>&#xe65c;</span>
         <span className='title'>云音乐</span>
-        <span className='iconfont search'>&#xe62b;</span>
+        <span
+          className='iconfont search'
+          onClick={() => {
+            props.history.push('/search');
+          }}
+        >
+          &#xe62b;
+        </span>
       </Top>
       <Tab>
         <NavLink to='/recommend' activeClassName='selected'>

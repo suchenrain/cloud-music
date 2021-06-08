@@ -7,6 +7,7 @@ const SingersComponent = lazy(() => import('@application/singers'));
 const RankComponent = lazy(() => import('@application/rank'));
 const AlbumComponent = lazy(() => import('@application/album'));
 const SingerComponent = lazy(() => import('@application/singer'));
+const SearchComponent = lazy(() => import('@application/search'));
 
 const SuspenseComponent = (Component) => (props) => {
   return (
@@ -58,6 +59,12 @@ const routes = [
             component: SuspenseComponent(AlbumComponent),
           },
         ],
+      },
+      {
+        path: '/search',
+        component: SuspenseComponent(SearchComponent),
+        exact: true,
+        key: 'search',
       },
     ],
   },
