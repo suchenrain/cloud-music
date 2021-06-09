@@ -11,21 +11,24 @@ export const Container = styled.div`
   overflow: hidden;
   background: #f2f3f4;
   transform-origin: right bottom;
-
   &.fly-enter,
   &.fly-appear {
-    transform: translate3d (100%, 0, 0);
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
   }
   &.fly-enter-active,
   &.fly-appear-active {
+    opacity: 1;
     transition: all 0.3s;
-    transform: translate3d (0, 0, 0);
+    transform: translate3d(0, 0, 0);
   }
   &.fly-exit {
-    transform: translate3d (0, 0, 0);
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
   }
   &.fly-exit-active {
+    opacity: 0;
     transition: all 0.3s;
-    transform: translate3d (100%, 0, 0);
+    transform: translate3d(100%, 0, 0);
   }
 `;
