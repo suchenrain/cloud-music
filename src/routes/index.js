@@ -61,6 +61,12 @@ const routes = [
         ],
       },
       {
+        path: '/album/:id',
+        exact: true,
+        key: 'album',
+        component: SuspenseComponent(AlbumComponent),
+      },
+      {
         path: '/search',
         component: SuspenseComponent(SearchComponent),
         exact: true,

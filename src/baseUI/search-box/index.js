@@ -17,12 +17,14 @@ const SearchBox = (props) => {
 
   useEffect(() => {
     handleQueryDebounce(query);
+    // eslint-disable-next-line
   }, [query]);
 
   useEffect(() => {
     if (newQuery !== query) {
       setQuery(newQuery);
     }
+    // eslint-disable-next-line
   }, [newQuery]);
 
   const handleChange = (e) => {
