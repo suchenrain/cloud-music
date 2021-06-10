@@ -16,16 +16,19 @@ export const SearchBoxWrapper = styled.div`
   }
   .box {
     flex: 1;
-    margin: 0 5px;
-    line-height: 18px;
-    background: ${style['theme-color']};
+    margin: 0 5px 0 10px;
+    padding: 2px 10px;
+    line-height: 20px;
+    background: #fbfbfb29;
+    caret-color: ${style['theme-color']};
     color: ${style['highlight-background-color']};
     font-size: ${style['font-size-m']};
     outline: none;
     border: none;
-    border-bottom: 1px solid ${style['border-color']};
+    border-radius: 10px;
     &::placeholder {
       color: ${style['font-color-light']};
+      cursor: pointer;
     }
   }
   .icon-delete {

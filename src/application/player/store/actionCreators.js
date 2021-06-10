@@ -1,3 +1,4 @@
+import { getSongDetailReq } from '@api/request';
 import { fromJS } from 'immutable';
 import * as actionTypes from './constants';
 
@@ -45,3 +46,19 @@ export const deleteSong = (data) => ({
   type: actionTypes.DELETE_SONG,
   data,
 });
+
+export const insertSong = (data) => ({
+  type: actionTypes.INSERT_SONG,
+  data,
+});
+
+export const getSongDetail = (id) => {
+  return (dispatch) => {
+    getSongDetailReq(id).then((data) => {
+      // @ts-ignore
+      let song = data.songs[0];
+      console.log(song);
+      dispatch(insertSong(song));
+    });
+  };
+};

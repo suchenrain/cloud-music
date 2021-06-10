@@ -1,11 +1,10 @@
-import * as actionTypes from './constants';
-import { fromJS } from 'immutable';
 import {
   getHotKeyWordsReq,
   getResultSongsListReq,
-  getSongDetailReq,
   getSuggestListReq,
 } from '@api/request';
+import { fromJS } from 'immutable';
+import * as actionTypes from './constants';
 
 const changeHotKeyWords = (data) => ({
   type: actionTypes.SET_HOT_KEYWRODS,
@@ -24,11 +23,6 @@ const changeResultSongs = (data) => ({
 
 export const changeEnterLoading = (data) => ({
   type: actionTypes.SET_ENTER_LOADING,
-  data,
-});
-
-export const insertSong = (data) => ({
-  type: actionTypes.INSERT_SONG,
   data,
 });
 
@@ -56,16 +50,6 @@ export const getSuggestList = (query) => {
       let res = data.result.songs || [];
       dispatch(changeResultSongs(res));
       dispatch(changeEnterLoading(false)); // 关闭 loading
-    });
-  };
-};
-
-export const getSongDetail = (id) => {
-  return (dispatch) => {
-    getSongDetailReq(id).then((data) => {
-      // @ts-ignore
-      let song = data.songs[0];
-      dispatch(insertSong(song));
     });
   };
 };

@@ -17,6 +17,7 @@ import LazyLoad, { forceCheck } from 'react-lazyload';
 import musicPNG from './music.png';
 import singerPNG from './singer.png';
 import { getName } from '@api/utils';
+import { getSongDetail } from '@application/player/store/actionCreators';
 
 function Search(props) {
   const {
@@ -246,7 +247,7 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(actionCreators.getSuggestList(data));
     },
     getSongDetailDispatch(id) {
-      dispatch(actionCreators.getSongDetail(id));
+      dispatch(getSongDetail(id));
     },
   };
 };
