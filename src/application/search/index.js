@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useState } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import {
   Container,
@@ -18,6 +18,7 @@ import musicPNG from './music.png';
 import singerPNG from './singer.png';
 import { getName } from '@api/utils';
 import { getSongDetail } from '@application/player/store/actionCreators';
+import MusicNote from '@baseUI/music-note';
 
 function Search(props) {
   const {
@@ -37,6 +38,8 @@ function Search(props) {
 
   const suggestList = immutableSuggestList.toJS();
   const songsList = immutableSongsList.toJS();
+
+  const musicNoteRef = useRef();
 
   const [show, setShow] = useState(false);
   const [query, setQuery] = useState('');
@@ -64,6 +67,11 @@ function Search(props) {
 
   const selectItem = (e, id) => {
     getSongDetailDispatch(id);
+    // @ts-ignore
+    musicNoteRef.current.startAnimation({
+      x: e.nativeEvent.clientX,
+      y: e.nativeEvent.clientY,
+    });
   };
 
   /*** UI function*/
@@ -221,6 +229,7 @@ function Search(props) {
             </div>
           </Scroll>
         </ShortcutWrapper>
+        <MusicNote ref={musicNoteRef}></MusicNote>
         {enterLoading ? <Loading></Loading> : null}
       </Container>
     </CSSTransition>

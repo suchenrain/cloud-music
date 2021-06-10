@@ -54,10 +54,11 @@ export const HotKey = styled.div`
     display: inline-block;
     padding: 5px 10px;
     margin: 0 20px 10px 0;
-    border-radius: 6px;
-    background: ${style['highlight-background-color']};
+    border-radius: 10px;
+    background: #9b9b9b2b;
     font-size: ${style['font-size-m']};
-    color: ${style['font-color-desc']};
+    /* color: ${style['font-color-desc']}; */
+    color: #5b5b5b;
   }
 `;
 
